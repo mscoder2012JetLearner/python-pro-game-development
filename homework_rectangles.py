@@ -16,16 +16,17 @@ class rectangle():
         pygame.draw.rect(sc,self.color,self.dimension,10)
 
 rectangle1=rectangle("green",(10,150,250,150))
-rectangle1.draw()
 rectangle2=rectangle("purple",(200,230,350,250))
-rectangle2.draw()
 pygame.display.update()
 
         
-    
+
 
 while True:
     for i in pygame.event.get():
         if i.type==pygame.QUIT:
             pygame.quit()
-
+        elif i.type==pygame.MOUSEBUTTONDOWN:
+            rectangle1.draw()
+            rectangle2.draw()
+            pygame.display.update()
