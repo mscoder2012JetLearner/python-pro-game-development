@@ -2,14 +2,17 @@ import pygame
 pygame.font.init()
 pygame.init()
 sc=pygame.display.set_mode((900,500))
-maxbullets=3
-bulletspeed=7
+maxbullets=1
+bulletspeed=10
 shipWidth=55
 shipHeight=40
 ship1health=10
 ship2health=10
-framespersecond=60
+framespersecond=80
 clock=pygame.time.Clock()
+ship1hit=pygame.USEREVENT+1
+ship2hit=pygame.USEREVENT+2
+winner=""
 
 ship1bullets=[]
 ship2bullets=[]
@@ -77,13 +80,19 @@ def moveship2(keypress,shiprect2):
        if shiprect2.y<450:
           shiprect2.y=shiprect2.y+6
 
-def movebullet(ship1bullets,ship2bullets):
+def movebullet(ship1bullets,ship2bullets,ship1rect,ship2rect):
    for bullets in ship1bullets:
       bullets.x=bullets.x+bulletspeed
+      if ship2rect.colliderect(bullets):
+         ship1bullets.remove(bullets)
+         pygame.event.post(pygame.event.Event(ship2hit))
       if bullets.x>=900:
          ship1bullets.remove(bullets)
    for bullets in ship2bullets:
       bullets.x=bullets.x-bulletspeed
+      if ship1rect.colliderect(bullets):
+         ship2bullets.remove(bullets)
+         pygame.event.post(pygame.event.Event(ship1hit))
       if bullets.x<=0:
          ship2bullets.remove(bullets)
 
@@ -93,16 +102,38 @@ while True:
     moveship1(keypress,ship1rect)
     moveship2(keypress,ship2rect)
     draw(ship1rect,ship2rect)
-    movebullet(ship1bullets,ship2bullets)
+    movebullet(ship1bullets,ship2bullets,ship1rect,ship2rect)
     for i in pygame.event.get():
         if i.type==pygame.QUIT:
             pygame.quit()
+        if i.type==ship1hit:
+           ship1health=ship1health-1
+        if i.type==ship2hit:
+           ship2health=ship2health-1
     if keypress[pygame.K_LCTRL] and len(ship1bullets)<maxbullets:
        bullet=pygame.Rect(ship1rect.x+55,ship1rect.y+20,10,5)
        ship1bullets.append(bullet)
     if keypress[pygame.K_RCTRL] and len(ship2bullets)<maxbullets:
       bullet=pygame.Rect(ship2rect.x,ship2rect.y+20,10,5)
       ship2bullets.append(bullet)
+    if ship1health<=0:
+       winner="player 2"
+       font=pygame.font.SysFont("Aptos",155)
+       text=font.render(winner,True,(255,255,255))
+       sc.blit(text,(240,250))
+       pygame.display.update()
+       pygame.time.delay(3000)
+       break
+    if ship2health<=0:
+       winner="player 1"
+       font=pygame.font.SysFont("Aptos",155)
+       text=font.render(winner,True,(255,255,255))
+       sc.blit(text,(240,250))
+       pygame.display.update()
+       pygame.time.delay(3000)
+       break
+       
+       
     
        
 
