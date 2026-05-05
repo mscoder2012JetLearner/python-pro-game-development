@@ -80,12 +80,17 @@ while True:
      all_items.draw(sc)
      point=pygame.sprite.spritecollide(bin1,recycle,True)
      minus_point=pygame.sprite.spritecollide(bin1,non_recycle,True)
-     pygame.display.update()
      for i in point:
          score=score+1
          font=pygame.font.SysFont("Aptos",155)
          text=font.render(str(score),True,(0,0,0))
-         sc.blit(text,(880,580))
+         sc.blit(text,(155,155))
+     for i in minus_point:
+         score=score-3
+         font=pygame.font.SysFont("Aptos",155)
+         text=font.render(str(score),True,(0,0,0))
+         sc.blit(text,(155,155))
+     pygame.display.update()    
      for i in pygame.event.get():
         if i.type==pygame.QUIT:
             pygame.quit()
