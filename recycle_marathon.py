@@ -2,6 +2,9 @@ import pygame
 import random
 pygame.init()
 
+score=0
+framespeed=1000
+clock=pygame.time.Clock()
 sc=pygame.display.set_mode((900,600))
 background=pygame.image.load(r"C:\Users\31mschwarz\OneDrive - Abbey Gate College\python pro game developer\images\recycle_bg.png")
 background=pygame.transform.scale(background,(900,600))
@@ -59,6 +62,7 @@ all_items.add(bin1)
 
 
 while True:
+     clock.tick(framespeed)
      keypress=pygame.key.get_pressed()
      if keypress[pygame.K_UP]:
          if bin1.rect.y>10:
@@ -77,6 +81,11 @@ while True:
      point=pygame.sprite.spritecollide(bin1,recycle,True)
      minus_point=pygame.sprite.spritecollide(bin1,non_recycle,True)
      pygame.display.update()
+     for i in point:
+         score=score+1
+         font=pygame.font.SysFont("Aptos",155)
+         text=font.render(str(score),True,(0,0,0))
+         sc.blit(text,(880,580))
      for i in pygame.event.get():
         if i.type==pygame.QUIT:
             pygame.quit()
