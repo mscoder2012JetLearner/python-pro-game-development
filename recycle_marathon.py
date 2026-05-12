@@ -1,9 +1,11 @@
 import pygame
 import random
+import time
 pygame.init()
 
+starting_time=time.time()
 score=0
-framespeed=1000
+framespeed=60
 clock=pygame.time.Clock()
 sc=pygame.display.set_mode((900,600))
 background=pygame.image.load(r"C:\Users\31mschwarz\OneDrive - Abbey Gate College\python pro game developer\images\recycle_bg.png")
@@ -62,34 +64,42 @@ all_items.add(bin1)
 
 
 while True:
+     time_changed=time.time()
+     differance=time_changed-starting_time
+     if differance>35:
+         if score>25:
+             score_message=font.render("You Win!",True,(0,0,0))
+             sc.blit(score_message,(400,400))
+         else:
+             score_message=font.render("You Loose",True,(0,0,0))
+             sc.blit(score_message,(400,400))
      clock.tick(framespeed)
      keypress=pygame.key.get_pressed()
      if keypress[pygame.K_UP]:
          if bin1.rect.y>10:
-           bin1.rect.y=bin1.rect.y-1
+           bin1.rect.y=bin1.rect.y-4
      if keypress[pygame.K_DOWN]:
          if bin1.rect.y<590:
-             bin1.rect.y=bin1.rect.y+1
+             bin1.rect.y=bin1.rect.y+4
      if keypress[pygame.K_RIGHT]:
          if bin1.rect.x<890:
-             bin1.rect.x=bin1.rect.x+1
+             bin1.rect.x=bin1.rect.x+4
      if keypress[pygame.K_LEFT]:
          if bin1.rect.x>10:
-             bin1.rect.x=bin1.rect.x-1
-     sc.blit(background,(0,0))
-     all_items.draw(sc)
+             bin1.rect.x=bin1.rect.x-4
      point=pygame.sprite.spritecollide(bin1,recycle,True)
      minus_point=pygame.sprite.spritecollide(bin1,non_recycle,True)
      for i in point:
          score=score+1
-         font=pygame.font.SysFont("Aptos",155)
-         text=font.render(str(score),True,(0,0,0))
-         sc.blit(text,(155,155))
+     font=pygame.font.SysFont("Aptos",35)
      for i in minus_point:
          score=score-3
-         font=pygame.font.SysFont("Aptos",155)
-         text=font.render(str(score),True,(0,0,0))
-         sc.blit(text,(155,155))
+     text=font.render("score="+str(score),True,(0,0,0))
+     sc.blit(background,(0,0))
+     all_items.draw(sc)
+     sc.blit(text,(15,15))   
+     t=font.render("time="+str(int(differance)),True,(0,0,0))
+     sc.blit(t,(725,35))
      pygame.display.update()    
      for i in pygame.event.get():
         if i.type==pygame.QUIT:
